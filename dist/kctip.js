@@ -48,32 +48,8 @@ var KCTip = (function () {
 
 	/* makesure mouseover triggered by mouse not touch */
 	var _preventMouseover = !1,
-	    _isTouch = !1;
-
-	document.addEventListener("DOMContentLoaded", function () {
-		function touchstartPreventMouseover(e) {
-			_preventMouseover = !0;
-			_isTouch = !0;
-		}
-		document.body.addEventListener("touchstart", touchstartPreventMouseover);
-		document.body.addEventListener("pointerenter", function pointerenterPreventMouseover(e) {
-			if (e.pointerType == 'touch') touchstartPreventMouseover();else {
-				_preventMouseover = !1;
-				_isTouch = !1;
-			}
-		});
-		document.body.addEventListener("mouseenter", function mouseoverPreventMouseover(e) {
-			//document.body.addEventListener("mouseover", function mouseoverPreventMouseover(e){
-			if (_isTouch) {
-				_isTouch = !1;
-				_preventMouseover = !0;
-			} else {
-				_preventMouseover = !1;
-			}
-		});
-		//document.body.addEventListener("mouseleave", function mouseleavePreventMouseover(e){
-		//	})
-	});
+	    _isTouch = !1,
+	    _isHover = !1;
 
 	var KCTip = {
 		//is_init:		false,
@@ -129,7 +105,7 @@ var KCTip = (function () {
 		// cont: 	HTML code or element node
 		// pos:		tip position, top || bottom || right || left
 		show: function show(el, cont, pos) {
-			if (_preventMouseover || !el) return !1;
+			if (_preventMouseover || !_isHover || !el) return !1;
 
 			el = el || document.body;
 			this.el = el;
@@ -384,6 +360,92 @@ var KCTip = (function () {
 		}
 	};
 
+	/* delegate event */
+	document.addEventListener("DOMContentLoaded", function () {
+		function touchstartPreventMouseover(e) {
+			_preventMouseover = !0;
+			_isTouch = !0;
+			_isHover = !1;
+		}
+		function touchendPreventMouseover(e) {
+			_preventMouseover = !1;
+			_isTouch = !1;
+			_isHover = !1;
+		}
+		document.body.addEventListener("touchstart", touchstartPreventMouseover);
+		document.body.addEventListener("touchend", touchendPreventMouseover);
+		document.body.addEventListener("touchcancel", touchendPreventMouseover);
+		//document.body.addEventListener("pointerenter", function pointerenterPreventMouseover(e){
+		document.body.addEventListener("pointerover", function pointerenterPreventMouseover(e) {
+			if (e.pointerType == 'touch') touchstartPreventMouseover();else {
+				_preventMouseover = !1;
+				_isTouch = !1;
+			}
+		});
+		//document.body.addEventListener("mouseenter", function mouseoverPreventMouseover(e){
+		document.body.addEventListener("mouseover", function mouseoverPreventMouseover(e) {
+			if (_isTouch) {
+				_isTouch = !1;
+				_preventMouseover = !0;
+			} else {
+				_preventMouseover = !1;
+				_isHover = !0;
+			}
+		});
+		//document.body.addEventListener("mouseleave", function mouseleavePreventMouseover(e){
+		document.body.addEventListener("mouseout", function mouseleavePreventMouseover(e) {
+			_isHover = !1;
+		});
+
+		var querySelector = '[href^="http://fleet.diablohu.com/"], [kctip]',
+		    eventTipshow = document.createEvent('Event'),
+		    eventTiphide = document.createEvent('Event');
+		eventTipshow.initEvent('tipshow', !0, !0);
+		eventTiphide.initEvent('tiphide', !0, !0);
+		document.body.addEventListener("mouseover", function mouseoverKCTip(e) {
+			if (!_preventMouseover) {
+				for (var target = e.target; target && target != this; target = target.parentNode) {
+					if (elmatches(target, querySelector)) {
+						return KCTip.show(target);
+						break;
+					}
+				}
+			}
+		}, !1);
+		document.body.addEventListener("mouseout", function mouseoutKCTip(e) {
+			for (var target = e.target; target && target != this; target = target.parentNode) {
+				if (elmatches(target, querySelector)) {
+					return KCTip.hide();
+					break;
+				}
+			}
+		}, !1);
+		document.body.addEventListener("click", function clickKCTip(e) {
+			for (var target = e.target; target && target != this; target = target.parentNode) {
+				if (elmatches(target, querySelector)) {
+					return KCTip.hide(!0);
+					break;
+				}
+			}
+		}, !1);
+		document.body.addEventListener("tipshow", function tipshowKCTip(e) {
+			for (var target = e.target; target && target != this; target = target.parentNode) {
+				if (elmatches(target, querySelector)) {
+					return KCTip.trigger_by_el(target);
+					break;
+				}
+			}
+		}, !1);
+		document.body.addEventListener("tiphide", function tiphideKCTip(e) {
+			for (var target = e.target; target && target != this; target = target.parentNode) {
+				if (elmatches(target, querySelector)) {
+					return KCTip.hide();
+					break;
+				}
+			}
+		}, !1);
+	});
+
 	/* check element matches query selector */
 	function elmatches(elm, selector) {
 		var matches = (elm.document || elm.ownerDocument).querySelectorAll(selector),
@@ -424,55 +486,6 @@ var KCTip = (function () {
 
 		return KCTip.move(x, y);
 	}
-
-	/* delegate event */
-	var querySelector = '[href^="http://fleet.diablohu.com/"], [kctip]',
-	    eventTipshow = document.createEvent('Event'),
-	    eventTiphide = document.createEvent('Event');
-	eventTipshow.initEvent('tipshow', !0, !0);
-	eventTiphide.initEvent('tiphide', !0, !0);
-	document.addEventListener("mouseover", function mouseoverKCTip(e) {
-		if (!_preventMouseover) {
-			for (var target = e.target; target && target != this; target = target.parentNode) {
-				if (elmatches(target, querySelector)) {
-					return KCTip.show(target);
-					break;
-				}
-			}
-		}
-	}, !1);
-	document.addEventListener("mouseout", function mouseoutKCTip(e) {
-		for (var target = e.target; target && target != this; target = target.parentNode) {
-			if (elmatches(target, querySelector)) {
-				return KCTip.hide();
-				break;
-			}
-		}
-	}, !1);
-	document.addEventListener("click", function clickKCTip(e) {
-		for (var target = e.target; target && target != this; target = target.parentNode) {
-			if (elmatches(target, querySelector)) {
-				return KCTip.hide(!0);
-				break;
-			}
-		}
-	}, !1);
-	document.addEventListener("tipshow", function tipshowKCTip(e) {
-		for (var target = e.target; target && target != this; target = target.parentNode) {
-			if (elmatches(target, querySelector)) {
-				return KCTip.trigger_by_el(target);
-				break;
-			}
-		}
-	}, !1);
-	document.addEventListener("tiphide", function tiphideKCTip(e) {
-		for (var target = e.target; target && target != this; target = target.parentNode) {
-			if (elmatches(target, querySelector)) {
-				return KCTip.hide();
-				break;
-			}
-		}
-	}, !1);
 
 	return KCTip;
 })();
