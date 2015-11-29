@@ -1,9 +1,9 @@
 {
-  "name": "KCTip",
-  "version": "0.1.0",
+  "name": "kctip",
+  "version": "0.1.1",
   "description": "",
   "main": "dist/kctip.js",
-  "author": "Diablohu",
+  "author": "diablohu",
   "license": "MIT",
   "repository": {
     "type": "git",

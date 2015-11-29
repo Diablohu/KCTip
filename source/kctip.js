@@ -1,25 +1,33 @@
 /*
 
-Current status
+# KCTip by Diablohu
+
+* https://github.com/Diablohu/KCTip
+
+
+
+## Current status
 
 * Tip layout done
 * Tip content NYI
 * Browser compatibility NYI
 
- */
-			
-/*
+
+
+## DOM tree
+
 div#kctip.kctip
 	div.wrapper
 		CONTENT
-*/
 
-/*
-polyfill to do
+
+
+## polyfill to do
 
 * transition event
 * classList
 * requestAnimationFrame
+
 */
 
 
