@@ -31,7 +31,7 @@ div#kctip.kctip
 */
 
 
-(function(){
+let KCTip = (function(){
 	"use strict";
 	
 	let _isMoving = false
@@ -84,6 +84,12 @@ div#kctip.kctip
 		//h:				0,
 		size_indicator:		8,
 		cache: {},
+		
+		// content type that currently supported
+		types: [
+				'ships',
+				'equipments'
+			],
 	
 		// content filters
 		filters: [],
@@ -126,13 +132,16 @@ div#kctip.kctip
 		show: function( el, cont, pos ){
 			if( _preventMouseover || !el )
 				return false;
+
+			cont = this.content(cont);
+			if( !cont )
+				return false;
 	
 			clearTimeout(this.timeout_fade);
 	
 			el = el || document.body;
 			this.el = el;
 			pos = pos || el.getAttribute('kctip-position') || this.pos;
-			cont = this.content(cont);
 
 			this.init();
 	
@@ -147,12 +156,7 @@ div#kctip.kctip
 		position:function(cont, pos){
 			this.body.style.top = '';
 			this.body.style.left = '';
-
-			if( cont.nodeType && cont.nodeType == 1 )
-				this.container.appendChild(cont);
-			else
-				this.container.innerHTML = cont;
-
+			this.update(cont);
 			this.w = this.body.offsetWidth;
 			this.h = this.body.offsetHeight;
 	
@@ -198,52 +202,71 @@ div#kctip.kctip
 		
 		// 格式化tip内容
 		content: function( cont, el ){
-			el = el || this.el;
-			
-			let t, i;
-			
 			if( !cont ){
+				let t, i;
+				el = el || this.el;
 				cont = el.getAttribute('href');
 				let matches = /\/([a-z]+)\/([0-9]+)/gi.exec(cont);
 				if( matches && matches.length > 1 ){
 					t = matches[1];
 					i = matches[2];
 				}
-			}
-			
-			if( t && i ){
-				if( !this.cache[t] )
-					this.cache[t] = {};
-
-				if( this.cache[t][i] )
-					return this.cache[t][i];
-				
-				this.curLoading = t + '::' + i;
-				if( !this.cache.loading ){
-					this.cache.loading = document.createElement('div');
-					this.cache.loading.classList.add('loading');
+				if( t && i && this.types.indexOf(t) >= 0 ){
+					if( !this.cache[t] )
+						this.cache[t] = {};
+	
+					if( this.cache[t][i] )
+						return this.cache[t][i];
+					
+					return this.load(t, i);
+				}else{
+					return null
 				}
-				this.load(t, i);
-				return this.cache.loading;
 			}
 	
 			return cont;
 		},
 		
-		// 读取内容
+		// update content html
+		update: function( cont ){
+			if( cont.nodeType && cont.nodeType == 1 )
+				this.container.appendChild(cont);
+			else
+				this.container.innerHTML = cont;
+		},
+		
+		// load content
 		load: function(t, i){
-			this.cache.loading.innerHTML = '载入中...';
+			this.curLoading = t + '::' + i;
+			//if( !this.cache.loading ){
+			//	this.cache.loading = document.createElement('div');
+			//	this.cache.loading.classList.add('loading');
+			//}
+			//this.cache.loading.innerHTML = '载入中...';
 			
 			let script = document.createElement('script');
 			script.src = 'http://fleet.diablohu.com/!/tip/'+t+'/'+i+'.js';
 			script.addEventListener('error', function(e) {
-				KCTip.cache.loading.innerHTML = '发生错误...';
+				//KCTip.cache.loading.innerHTML = '发生错误...';
+				KCTip.update('发生错误...')
 			});
 			
 			document.head.appendChild( script );
+			
+			return '载入中...'
+		},
+		
+		// content loaded
+		loaded: function( t, i, html ){
+			if( !this.cache[t] )
+				this.cache[t] = {};
+			this.cache[t][i] = html
+			
+			if( t + '::' + i == this.curLoading )
+				return KCTip.update(html)
 		},
 	
-		// 移动tip到 x,y
+		// move tip to x, y
 		move: function(x,y){
 			this.body.style.top = y + 'px';
 			this.body.style.left = x + 'px';
