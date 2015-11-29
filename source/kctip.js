@@ -27,11 +27,12 @@ div#kctip.kctip
 * transition event
 * classList
 * requestAnimationFrame
+* DOMContentLoaded
 
 */
 
 
-let KCTip = (function(){
+var KCTip = (function(){
 	"use strict";
 	
 	let _isMoving = false
@@ -48,30 +49,32 @@ let KCTip = (function(){
 		let _preventMouseover = false
 			,_isTouch = false;
 		
-		function touchstartPreventMouseover(e){
-				_preventMouseover = true;
-				_isTouch = true;
-			}
-		document.addEventListener("touchstart", touchstartPreventMouseover);
-		document.addEventListener("pointerenter", function pointerenterPreventMouseover(e){
-				if( e.pointerType == 'touch' )
-					touchstartPreventMouseover();
-				else{
-					_preventMouseover = false;
-					_isTouch = false;
-				}
-			});
-		//document.addEventListener("mouseenter", function mouseoverPreventMouseover(e){
-		document.addEventListener("mouseover", function mouseoverPreventMouseover(e){
-				if( _isTouch ){
-					_isTouch = false;
+		document.addEventListener("DOMContentLoaded", function(){
+			function touchstartPreventMouseover(e){
 					_preventMouseover = true;
-				}else{
-					_preventMouseover = false;
+					_isTouch = true;
 				}
-			});
-		//document.addEventListener("mouseleave", function mouseleavePreventMouseover(e){
-		//	})
+			document.body.addEventListener("touchstart", touchstartPreventMouseover);
+			document.body.addEventListener("pointerenter", function pointerenterPreventMouseover(e){
+					if( e.pointerType == 'touch' )
+						touchstartPreventMouseover();
+					else{
+						_preventMouseover = false;
+						_isTouch = false;
+					}
+				});
+			document.body.addEventListener("mouseenter", function mouseoverPreventMouseover(e){
+			//document.body.addEventListener("mouseover", function mouseoverPreventMouseover(e){
+					if( _isTouch ){
+						_isTouch = false;
+						_preventMouseover = true;
+					}else{
+						_preventMouseover = false;
+					}
+				});
+			//document.body.addEventListener("mouseleave", function mouseleavePreventMouseover(e){
+			//	})
+		})
 
 
 	let KCTip = {
@@ -363,9 +366,14 @@ let KCTip = (function(){
 			}
 	
 			// 超出X轴左边界
-			else if (x < 0)
+			else if (x < 0){
 				//nx = 15;
-				pos = this['pos_right']( w , h );
+				//pos = this['pos_right']( w , h );
+				pos = {
+					'x': 10,
+					'y': y
+				}
+			}
 	
 			// 超出Y轴下边界
 			if ( (y + h) > (scrollTop + clientHeight) )

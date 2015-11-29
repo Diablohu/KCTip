@@ -29,6 +29,7 @@ div#kctip.kctip
 * transition event
 * classList
 * requestAnimationFrame
+* DOMContentLoaded
 
 */
 
@@ -49,28 +50,30 @@ var KCTip = (function () {
 	var _preventMouseover = !1,
 	    _isTouch = !1;
 
-	function touchstartPreventMouseover(e) {
-		_preventMouseover = !0;
-		_isTouch = !0;
-	}
-	document.addEventListener("touchstart", touchstartPreventMouseover);
-	document.addEventListener("pointerenter", function pointerenterPreventMouseover(e) {
-		if (e.pointerType == 'touch') touchstartPreventMouseover();else {
-			_preventMouseover = !1;
-			_isTouch = !1;
-		}
-	});
-	//document.addEventListener("mouseenter", function mouseoverPreventMouseover(e){
-	document.addEventListener("mouseover", function mouseoverPreventMouseover(e) {
-		if (_isTouch) {
-			_isTouch = !1;
+	document.addEventListener("DOMContentLoaded", function () {
+		function touchstartPreventMouseover(e) {
 			_preventMouseover = !0;
-		} else {
-			_preventMouseover = !1;
+			_isTouch = !0;
 		}
+		document.body.addEventListener("touchstart", touchstartPreventMouseover);
+		document.body.addEventListener("pointerenter", function pointerenterPreventMouseover(e) {
+			if (e.pointerType == 'touch') touchstartPreventMouseover();else {
+				_preventMouseover = !1;
+				_isTouch = !1;
+			}
+		});
+		document.body.addEventListener("mouseenter", function mouseoverPreventMouseover(e) {
+			//document.body.addEventListener("mouseover", function mouseoverPreventMouseover(e){
+			if (_isTouch) {
+				_isTouch = !1;
+				_preventMouseover = !0;
+			} else {
+				_preventMouseover = !1;
+			}
+		});
+		//document.body.addEventListener("mouseleave", function mouseleavePreventMouseover(e){
+		//	})
 	});
-	//document.addEventListener("mouseleave", function mouseleavePreventMouseover(e){
-	//	})
 
 	var KCTip = {
 		//is_init:		false,
@@ -339,9 +342,14 @@ var KCTip = (function () {
 			}
 
 			// 超出X轴左边界
-			else if (x < 0)
+			else if (x < 0) {
 					//nx = 15;
-					pos = this['pos_right'](w, h);
+					//pos = this['pos_right']( w , h );
+					pos = {
+						'x': 10,
+						'y': y
+					};
+				}
 
 			// 超出Y轴下边界
 			if (y + h > scrollTop + clientHeight)
