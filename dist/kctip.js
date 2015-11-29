@@ -42,7 +42,7 @@ var KCTip = (function () {
 	/* style */
 	// STYLE will be replaced with CSS
 	var style = document.createElement('style');
-	style.innerHTML = '#kctip{z-index:100;position:absolute;display:none;top:-1000px;left:-1000px;color:#f2f2f2;background:rgba(32,32,32,.85);font-size:14px;line-height:150%;opacity:0;cursor:default!important;-webkit-transition:opacity .2s ease-out;transition:opacity .2s ease-out;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;pointer-events:none;-webkit-box-shadow:0 5px 5px rgba(0,0,0,.35);box-shadow:0 5px 5px rgba(0,0,0,.35);max-width:320px}#kctip>.wrapper{display:block;position:relative;z-index:1;border:1px solid rgba(255,255,255,.5);padding:4px 6px}#kctip.mod-blur-backdrop,#kctip.mod-blur-backdrop>.wrapper{background:rgba(32,32,32,.5)}#kctip.on{opacity:1}#kctip.on.mod-blur-backdrop{-webkit-backdrop-filter:blur(7.5px);backdrop-filter:blur(7.5px)}#kctip.show{display:block;will-change:opacity}#kctip:before{position:absolute;width:0;height:0;overflow:hidden;content:"";border:5px solid transparent}#kctip .loading{padding:.25em .75em}#kctip[kctip-indicator-pos=bottom]:before{border-top-color:rgba(255,255,255,.5);left:50%;left:-webkit-calc(50% - 4px);left:calc(50% - 4px);bottom:-10px}#kctip[kctip-indicator-pos=bottom]{-webkit-box-shadow:0 -5px 5px rgba(0,0,0,.35);box-shadow:0 -5px 5px rgba(0,0,0,.35)}#kctip[kctip-indicator-pos=top]:before{border-bottom-color:rgba(255,255,255,.5);left:50%;left:-webkit-calc(50% - 4px);left:calc(50% - 4px);top:-10px}#kctip[kctip-indicator-pos=left]:before{border-right-color:rgba(255,255,255,.5);top:50%;top:-webkit-calc(50% - 4px);top:calc(50% - 4px);left:-10px}#kctip[kctip-indicator-pos=right]:before{border-left-color:rgba(255,255,255,.5);top:50%;top:-webkit-calc(50% - 4px);top:calc(50% - 4px);right:-10px}';
+	style.innerHTML = '#kctip{z-index:100;position:absolute;display:none;top:-1000px;left:-1000px;color:#f2f2f2;background:rgba(38,38,38,.9);font-size:14px;line-height:150%;opacity:0;cursor:default!important;-webkit-transition:opacity .2s ease-out;transition:opacity .2s ease-out;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;pointer-events:none;-webkit-box-shadow:0 5px 5px rgba(0,0,0,.35);box-shadow:0 5px 5px rgba(0,0,0,.35);max-width:320px}#kctip>.wrapper{display:block;position:relative;z-index:1;border:1px solid #cec6a5;padding:8px 10px}#kctip.mod-blur-backdrop,#kctip.mod-blur-backdrop>.wrapper{background:rgba(38,38,38,.5)}#kctip.on{opacity:1}#kctip.on.mod-blur-backdrop{-webkit-backdrop-filter:blur(7.5px);backdrop-filter:blur(7.5px)}#kctip.show{display:block;will-change:opacity}#kctip:before{position:absolute;width:0;height:0;overflow:hidden;content:"";border:5px solid transparent}#kctip .loading{padding:.25em .75em}#kctip[kctip-indicator-pos=bottom]:before{border-top-color:#cec6a5;left:50%;left:-webkit-calc(50% - 4px);left:calc(50% - 4px);bottom:-10px}#kctip[kctip-indicator-pos=bottom]{-webkit-box-shadow:0 -5px 5px rgba(0,0,0,.35);box-shadow:0 -5px 5px rgba(0,0,0,.35)}#kctip[kctip-indicator-pos=top]:before{border-bottom-color:#cec6a5;left:50%;left:-webkit-calc(50% - 4px);left:calc(50% - 4px);top:-10px}#kctip[kctip-indicator-pos=left]:before{border-right-color:#cec6a5;top:50%;top:-webkit-calc(50% - 4px);top:calc(50% - 4px);left:-10px}#kctip[kctip-indicator-pos=right]:before{border-left-color:#cec6a5;top:50%;top:-webkit-calc(50% - 4px);top:calc(50% - 4px);right:-10px}#kctip[kctip-class=equipments] h3{display:block;position:relative;padding-left:42px;margin:0}#kctip[kctip-class=equipments] h3>s{display:block;width:36px;height:36px;position:absolute;top:0;left:0;background:50% 50% no-repeat}#kctip[kctip-class=equipments] h3>strong{font-size:22px;line-height:22px;color:#e8dfc2;display:block;position:relative;font-weight:400;padding:0 0 2px}#kctip[kctip-class=equipments] h3>strong small{padding-left:.35em;font-size:smaller}#kctip[kctip-class=equipments] h3>small{font-size:14px;font-weight:400;color:#c9c19f;display:block;font-family:"Helvetica Neue",Helvetica,"Nimbus Sans L",Arial,"Liberation Sans","Microsoft YaHei UI","Microsoft YaHei","Hiragino Sans GB","Wenquanyi Micro Hei","WenQuanYi Zen Hei","ST Heiti",SimHei,"WenQuanYi Zen Hei Sharp",Meiryo,sans-serif;padding:0;line-height:14px;margin-top:2px}#kctip[kctip-class=equipments] h3~span{display:block}#kctip[kctip-class=equipments] h3~span.requirement{padding-left:22px;background:0 50% no-repeat;-webkit-background-size:16px 16px;background-size:16px 16px}#kctip[kctip-class=equipments] h3~span.requirement.is-blueprint{background-image:url(http://fleet.diablohu.com/!/assets/images/blueprint.png)}#kctip[kctip-class=equipments] h3~span.requirement.is-catapult{background-image:url(http://fleet.diablohu.com/!/assets/images/catapult.png)}#kctip[kctip-class=equipments] h3+span{border-top:1px dashed #c9c19f;padding-top:8px;margin-top:10px}#kctip[kctip-class=equipments] h3+span.requirement{background-position-y:-webkit-calc(50% + 4px);background-position-y:calc(50% + 4px)}';
 	document.head.appendChild(style);
 
 	/* makesure mouseover triggered by mouse not touch */
@@ -73,18 +73,22 @@ var KCTip = (function () {
 	//	})
 
 	var KCTip = {
-		//is_init:			false,
-		//is_showing:		false,
-		// curLoading: 		null,
+		//is_init:		false,
+		//is_showing:	false,
+		//curLoading: 	null,
 		pos: 'bottom',
-		//pos:				'mouse',
-		//w:				0,
-		//h:				0,
+		//pos:			'mouse',
+		//w:			0,
+		//h:			0,
+		//t: 			null,
 		size_indicator: 8,
+		language: 'zh_cn',
 		cache: {},
 
 		// content type that currently supported
-		types: ['ships', 'equipments'],
+		types: [
+		//'ships',
+		'equipments'],
 
 		// content filters
 		filters: [],
@@ -130,25 +134,26 @@ var KCTip = (function () {
 			if (!cont) return !1;
 
 			clearTimeout(this.timeout_fade);
-			pos = pos || el.getAttribute('kctip-position') || this.pos;
+			//pos = pos || el.getAttribute('kctip-position') || this.pos;
+			this.pos = pos || el.getAttribute('kctip-position') || this.pos;
 
 			this.init();
 
 			if (!this.body.classList.contains('show')) this.body.classList.add('show');
 
-			this.position(cont, pos);
+			this.update(cont);
+			this.position(pos);
 			this.is_showing = !0;
 		},
 
 		// 计算tip位置
-		position: function position(cont, pos) {
+		position: function position(pos) {
 			this.body.style.top = '';
 			this.body.style.left = '';
-			this.update(cont);
 			this.w = this.body.offsetWidth;
 			this.h = this.body.offsetHeight;
 
-			var coords = this['pos_' + pos](this.w, this.h);
+			var coords = this['pos_' + (pos || this.pos)](this.w, this.h);
 			if (coords) this.move(coords.x, coords.y);
 		},
 
@@ -178,7 +183,12 @@ var KCTip = (function () {
 			this.body.removeAttribute('kctip-indicator-pos');
 			this.body.removeAttribute('kctip-indicator-offset-x');
 			this.body.removeAttribute('kctip-indicator-offset-y');
+			this.body.removeAttribute('kctip-class');
+			this.container.innerHTML = '';
 			delete this.curLoading;
+			delete this.t;
+			delete this.w;
+			delete this.h;
 			_x = null;
 			_y = null;
 		},
@@ -196,11 +206,14 @@ var KCTip = (function () {
 					i = matches[2];
 				}
 				if (t && i && this.types.indexOf(t) >= 0) {
+					this.t = t;
+
 					if (!this.cache[t]) this.cache[t] = {};
+					if (!this.cache[t][this.language]) this.cache[t][this.language] = {};
 
-					if (this.cache[t][i]) return this.cache[t][i];
+					if (this.cache[t][this.language][i]) return this.cache[t][this.language][i];
 
-					return this.load(t, i);
+					return this.load(t, i, this.language);
 				} else {
 					return null;
 				}
@@ -210,13 +223,19 @@ var KCTip = (function () {
 		},
 
 		// update content html
-		update: function update(cont) {
+		update: function update(cont, t) {
+			this.t = t || this.t;
 			if (cont.nodeType && cont.nodeType == 1) this.container.appendChild(cont);else this.container.innerHTML = cont;
+			if (this.t) this.body.setAttribute('kctip-class', this.t);
+			return this.position();
 		},
 
 		// load content
-		load: function load(t, i) {
-			this.curLoading = t + '::' + i;
+		// t = TYPE
+		// i = ID
+		// l = LANGUAGE
+		load: function load(t, i, l) {
+			this.curLoading = t + '::' + i + '::' + l;
 			//if( !this.cache.loading ){
 			//	this.cache.loading = document.createElement('div');
 			//	this.cache.loading.classList.add('loading');
@@ -224,23 +243,25 @@ var KCTip = (function () {
 			//this.cache.loading.innerHTML = '载入中...';
 
 			var script = document.createElement('script');
-			script.src = 'http://fleet.diablohu.com/!/tip/' + t + '/' + i + '.js';
+			script.src = 'http://fleet.diablohu.com/!/tip/' + t + '/' + l + '/' + i + '.js';
 			script.addEventListener('error', function (e) {
 				//KCTip.cache.loading.innerHTML = '发生错误...';
-				KCTip.update('发生错误...');
+				KCTip.update('发生错误...', 'error');
 			});
 
 			document.head.appendChild(script);
 
+			this.t = 'loading';
 			return '载入中...';
 		},
 
 		// content loaded
-		loaded: function loaded(t, i, html) {
+		loaded: function loaded(t, i, l, html) {
 			if (!this.cache[t]) this.cache[t] = {};
-			this.cache[t][i] = html;
+			if (!this.cache[t][this.language]) this.cache[t][this.language] = {};
+			this.cache[t][this.language][i] = html;
 
-			if (t + '::' + i == this.curLoading) return KCTip.update(html);
+			if (t + '::' + i + '::' + l == this.curLoading) return KCTip.update(html, t);
 		},
 
 		// move tip to x, y
