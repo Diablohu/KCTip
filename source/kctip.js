@@ -133,14 +133,13 @@ let KCTip = (function(){
 			if( _preventMouseover || !el )
 				return false;
 
+			el = el || document.body;
+			this.el = el;
 			cont = this.content(cont);
 			if( !cont )
 				return false;
 	
 			clearTimeout(this.timeout_fade);
-	
-			el = el || document.body;
-			this.el = el;
 			pos = pos || el.getAttribute('kctip-position') || this.pos;
 
 			this.init();
