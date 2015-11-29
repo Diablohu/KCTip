@@ -1,0 +1,100 @@
+// KCTip
+
+@kctip_zIndex: 		100;
+@kctip_fontColor: 	#f2f2f2;
+@kctip_bgColor: 	rgba(32,32,32,.85);
+@kctip_borderColor: rgba(255, 255, 255, .5);
+@kctip_fontSize: 	14px;
+@kctip_lineHeight: 	150%;
+@kctip_maxWidth: 	320px;
+
+
+#kctip{
+	z-index:		@kctip_zIndex;
+	position:		absolute;
+	display:		none;
+	top:			-1000px;
+	left:			-1000px;
+	color:			@kctip_fontColor;
+	background:		@kctip_bgColor;
+	font-size: 		@kctip_fontSize;
+	line-height:	@kctip_lineHeight;
+	opacity:		0;
+	cursor:			default !important;
+	transition: 	opacity .2s ease-out;
+	user-select: 	none;
+	pointer-events: none;
+	box-shadow:		0 5px 5px rgba(0,0,0,0.35);
+	max-width: 		@kctip_maxWidth;
+
+	&>.wrapper{
+		display:	block;
+		position:	relative;
+		z-index:	1;
+		border: 	1px solid @kctip_borderColor;
+		padding: 	4px 6px;
+	}
+
+	&.mod-blur-backdrop{
+		background:		fade(@kctip_bgColor, 50%);
+		&>.wrapper{
+			background:	fade(@kctip_bgColor, 50%);
+		}
+	}
+
+	&.on{
+		opacity:	1;
+		&.mod-blur-backdrop{
+			backdrop-filter: 	~"blur(7.5px)";
+		}
+	}
+	&.show{
+		display:	block;
+		will-change:opacity;
+	}
+
+	&:before{
+		position:	absolute;
+		width:		0;
+		height:		0;
+		overflow:	hidden;
+		content:	"";
+		border: 	5px solid transparent;
+	}
+	
+	.loading{
+		padding: 	.25em .75em;
+	}
+
+	&[kctip-indicator-pos="bottom"]:before{
+		@minus:	4px;
+		border-top-color:	@kctip_borderColor;
+		left:				50%;
+		left:				~"calc(50% - @{minus})";
+		bottom: 			-10px;
+	}
+	&[kctip-indicator-pos="bottom"]{
+		box-shadow:		0 -5px 5px rgba(0,0,0,0.35);
+	}
+	&[kctip-indicator-pos="top"]:before{
+		@minus:	4px;
+		border-bottom-color:@kctip_borderColor;
+		left:				50%;
+		left:				~"calc(50% - @{minus})";
+		top: 				-10px;
+	}
+	&[kctip-indicator-pos="left"]:before{
+		@minus:	4px;
+		border-right-color:	@kctip_borderColor;
+		top:				50%;
+		top:				~"calc(50% - @{minus})";
+		left: 				-10px;
+	}
+	&[kctip-indicator-pos="right"]:before{
+		@minus:	4px;
+		border-left-color:	@kctip_borderColor;
+		top:				50%;
+		top:				~"calc(50% - @{minus})";
+		right: 				-10px;
+	}
+}

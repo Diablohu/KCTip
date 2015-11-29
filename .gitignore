@@ -1,0 +1,5 @@
+/node_modules
+/dist/kctip.css
+/dist/kctip.min.css
+/gulpfile.js
+/jsconfig.json
