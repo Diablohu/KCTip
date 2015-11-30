@@ -401,7 +401,7 @@ var KCTip = (function () {
 	};
 
 	/* delegate event */
-	_on(document, "DOMContentLoaded", function () {
+	function _onDOMReady() {
 		var _body = document.body;
 		function touchstartPreventMouseover(e) {
 			_preventMouseover = !0;
@@ -470,7 +470,14 @@ var KCTip = (function () {
 				KCTip.hide();
 			});
 		});
-	});
+	}
+	if (document.readyState !== "loading") {
+		_onDOMReady();
+	} else {
+		_on(document, "DOMContentLoaded", function () {
+			_onDOMReady();
+		});
+	}
 
 	/* plain js */
 	/* https://plainjs.com/ */
