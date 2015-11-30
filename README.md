@@ -7,12 +7,8 @@ Bundle `dist/kctip.min.js` to your web site, and all A tags that links to [fleet
 
 [Example #1](http://kancolle.diablohu.com/guide/2015autumn/e4/)
 
-**Note: Currently only equipment tooltip available**
-
 ## Current status
 
 * Tip layout done
-* Tip content
-  * Equipments done
-  * Ships NYI
+* Tip content done
 * Browser compatibility NYI

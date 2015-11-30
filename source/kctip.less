@@ -17,7 +17,7 @@
 @folder_images: 	"http://fleet.diablohu.com/!/assets/images";
 
 
-#kctip{
+.kctip{
 	z-index:		@kctip_zIndex;
 	position:		absolute;
 	display:		none;
@@ -104,6 +104,113 @@
 		top:				50%;
 		top:				~"calc(50% - @{minus})";
 		right: 				-10px;
+	}
+	
+	
+	
+	&[kctip-class="ships"]{
+		@width_card:126px;
+		min-width: 	320px;
+		width: 		320px;
+		max-width: 	none;
+		&>.wrapper{
+			padding: 	0 0 0 (@width_card + 3);
+			overflow: 	hidden;
+			min-height: 176px;
+		}
+		img{
+			display: 	block;
+			float: 		left;
+			width: 		auto;
+			height: 	auto;
+			border: 	0;
+			min-width: 	@width_card;
+			max-width: 	@width_card;
+			margin: 	1px 1px 1px (0 - @width_card - 1);
+		}
+		h3,h4{
+			margin: 	0;
+			overflow: 	hidden;
+			padding: 	0 0 0 6px;
+		}
+		h3{
+			height: 	34px;
+			line-height:34px;
+			font-size: 	22px;
+			font-weight:lighter;
+			background: #cec6a5;
+			color: 		#594700;
+			small{
+				font-size: 	14px;
+				padding: 	0 0 0 .5em;
+				vertical-align: middle;
+			}
+		}
+		h4{
+			height: 	20px;
+			line-height:20px;
+			font-size: 	12px;
+			font-weight:normal;
+			background: #594700;
+			color: 		#cec6a5;
+			letter-spacing: -.025em;
+			i{
+				font-style: normal;
+			}
+			b{
+				font-weight:normal;
+				padding: 	0 .15em;
+			}
+		}
+		dl{
+			margin: 	0;
+			line-height:19px;
+			font-size: 	12px;
+			position: 	relative;
+			width: 		100%;
+			//padding: 	4px 0 0 0;
+			padding: 	3px 8px 0 8px;
+			//border-left: 	6px solid transparent;
+			//border-right: 	6px solid transparent;
+			box-sizing: border-box;
+			dt, dd{
+				display: 	block;
+				position: 	relative;
+				margin: 	0;
+				padding: 	0;
+				float: 		left;
+			}
+			dt{
+				max-width:	18%;
+				padding-right: 6px;
+				box-sizing: border-box;
+			}
+			dd{
+				width: 		32%;
+				font-size: 	13px;
+				color: 		#fff2bf;
+				font-weight:lighter;
+				sup{
+					display: 	inline-block;
+					font-size: 	12px;
+					transform: 	scale((10 / 12));
+					transform-origin: 0 100%;
+					margin: 	-100% -100% 0 0;
+					padding-left: .35em;
+					opacity: 	.75;
+					//position: 	absolute;
+					//top: 		-4px;
+					//left: 		1.5em;
+					//width: 		200%;
+				}
+				&:nth-child(4n+2){
+					width: 	28%;
+				}
+				&:nth-child(4n+4){
+					width: 	36%;
+				}
+			}
+		}
 	}
 	
 	

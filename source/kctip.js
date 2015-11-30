@@ -35,14 +35,57 @@ div#kctip.kctip
 var KCTip = (function(){
 	"use strict";
 	
+	
+	/* */
+		// check element matches query selector 
+		function elmatches(elm, selector) {
+			if( elm == document )
+				return false;
+			let matches = (elm.document || elm.ownerDocument).querySelectorAll(selector),
+				i = matches.length;
+			while (--i >= 0 && matches.item(i) !== elm) ;
+			return i > -1;
+		}
+		function _append(p, c){
+			return p.appendChild(c);
+		}
+		function _create(t){
+			return document.createElement(t);
+		}
+		function _on(target, type, listener, useCapture){
+			return target.addEventListener(type, listener, useCapture);
+		}
+		function _off(target, type, listener, useCapture){
+			return target.removeEventListener(type, listener, useCapture);
+		}
+		function _delegatedo(e, querySelector, callback){
+			for (var target=e.target; target && target!=this; target=target.parentNode) {
+				if( elmatches(target, querySelector) ){
+					return callback(target);
+					break;
+				}
+			}
+		}
+		function _addClass(target, c){
+			return target.classList.add(c);
+		}
+		function _removeClass(target, c){
+			return target.classList.remove(c);
+		}
+		function _hasClass(target, c){
+			return target.classList.contains(c);
+		}
+	
+	
+	
 	let _isMoving = false
 		,_x, _y;
 	
 	/* style */
 		// STYLE will be replaced with CSS
-		let style = document.createElement('style');
+		let style = _create('style');
 		style.innerHTML = '[[STYLE]]';
-		document.head.appendChild( style );
+		_append(document.head, style);
 
 
 	/* makesure mouseover triggered by mouse not touch */
@@ -66,7 +109,7 @@ var KCTip = (function(){
 		
 		// content type that currently supported
 		types: [
-				//'ships',
+				'ships',
 				'equipments'
 			],
 	
@@ -80,26 +123,26 @@ var KCTip = (function(){
 			if(this.is_init)
 				return this;
 			
-			this.body = document.createElement('div');
-			this.body.classList.add('kctip');
+			this.body = _create('div');
+			_addClass(this.body, 'kctip');
 			this.body.setAttribute('id', 'kctip');
 			let evts = ['transitionend','webkitTransitionEnd','mozTransitionEnd'];
 			evts.forEach(function(evt){
-				this.body.addEventListener(evt, function(e) {
+				_on(this.body, evt, function(e) {
 					let style = window.getComputedStyle ? getComputedStyle(e.target, null) : e.target.currentStyle;
 					if( e.currentTarget == e.target && e.propertyName == 'opacity' && style.opacity == 0 )
 						KCTip.hideAfter();
 				})
 			}, this)
-			document.body.appendChild( this.body );
+			_append(document.body, this.body);
 			
-			this.container = document.createElement('div');
-			this.container.classList.add('wrapper');
-			this.body.appendChild( this.container );
+			this.container = _create('div');
+			_addClass(this.container, 'wrapper');
+			_append(this.body, this.container);
 	
 			// backdrop-filter
 				if( 'backdrop-filter' in document.documentElement.style || '-webkit-backdrop-filter' in document.documentElement.style )
-					this.body.addClass('mod-blur-backdrop');
+					_addClass(this.body, 'mod-blur-backdrop');
 	
 			this.is_init=true;
 		},
@@ -112,23 +155,22 @@ var KCTip = (function(){
 			if( _preventMouseover || !_isHover || !el )
 				return false;
 
-			el = el || document.body;
-			this.el = el;
+			this.el = el || document.body;
 			cont = this.content(cont);
 			if( !cont )
 				return false;
-	
+
 			clearTimeout(this.timeout_fade);
 			//pos = pos || el.getAttribute('kctip-position') || this.pos;
-			this.pos = pos || el.getAttribute('kctip-position') || this.pos;
+			this.pos = pos || this.el.getAttribute('kctip-position') || this.pos;
 
 			this.init();
 	
-			if( !this.body.classList.contains('show') )
-				this.body.classList.add('show');
+			if( !_hasClass(this.body, 'show') )
+				_addClass(this.body, 'show');
 	
 			this.update(cont);
-			this.position( pos );	
+			//this.position( pos );	
 			this.is_showing=true;
 		},
 	
@@ -153,8 +195,8 @@ var KCTip = (function(){
 			//this.el_pending = null
 			
 			function h(){
-				KCTip.body.classList.remove('on');
-				KCTip.el.removeEventListener(KCTipMouseMoveHandler);
+				_removeClass(KCTip.body, 'on');
+				_off( KCTip.el, 'mousemove', KCTipMouseMoveHandler );
 				KCTip.el = null;
 				KCTip.is_showing = false;
 				KCTip.pos = 'bottom';
@@ -168,13 +210,13 @@ var KCTip = (function(){
 		
 		// 完全隐藏
 		hideAfter: function(){
-			this.body.classList.remove('show');
+			_removeClass(this.body, 'show');
 			this.body.style.top = '';
 			this.body.style.left = '';
 			this.body.removeAttribute('kctip-indicator-pos');
 			this.body.removeAttribute('kctip-indicator-offset-x');
 			this.body.removeAttribute('kctip-indicator-offset-y');
-			this.body.removeAttribute('kctip-class')
+			this.body.removeAttribute('kctip-class');
 			this.container.innerHTML = ''
 			delete this.curLoading;
 			delete this.t;
@@ -218,12 +260,17 @@ var KCTip = (function(){
 		// update content html
 		update: function( cont, t ){
 			this.t = t || this.t;
+			
 			if( cont.nodeType && cont.nodeType == 1 )
-				this.container.appendChild(cont);
+				_append(this.container, cont);
 			else
 				this.container.innerHTML = cont;
+				
 			if( this.t )
 				this.body.setAttribute('kctip-class', this.t);
+			else
+				this.body.removeAttribute('kctip-class');
+				
 			return this.position();
 		},
 		
@@ -234,19 +281,19 @@ var KCTip = (function(){
 		load: function(t, i, l){
 			this.curLoading = t + '::' + i + '::' + l;
 			//if( !this.cache.loading ){
-			//	this.cache.loading = document.createElement('div');
-			//	this.cache.loading.classList.add('loading');
+			//	this.cache.loading = _create('div');
+			//	_addClass(this.cache, 'loading');
 			//}
 			//this.cache.loading.innerHTML = '载入中...';
 			
-			let script = document.createElement('script');
+			let script = _create('script');
 			script.src = 'http://fleet.diablohu.com/!/tip/'+t+'/'+l+'/'+i+'.js';
-			script.addEventListener('error', function(e) {
+			_on(script, 'error', function(e) {
 				//KCTip.cache.loading.innerHTML = '发生错误...';
-				KCTip.update('发生错误...', 'error')
+				KCTip.update('发生错误...', 'error');
 			});
 			
-			document.head.appendChild( script );
+			_append(document.head, script);
 			
 			this.t = 'loading';
 			return '载入中...';
@@ -268,7 +315,7 @@ var KCTip = (function(){
 		move: function(x,y){
 			this.body.style.top = y + 'px';
 			this.body.style.left = x + 'px';
-			this.body.classList.add('on');
+			_addClass(this.body, 'on');
 		},
 	
 		// 获取小箭头尺寸
@@ -278,7 +325,7 @@ var KCTip = (function(){
 	
 		// tip位置函数
 		pos_mouse: function(w,h){
-			this.el.addEventListener('mousemove', KCTipMouseMoveHandler);
+			_on(this.el, 'mousemove', KCTipMouseMoveHandler);
 		},
 		pos_bottom: function(w,h){
 			let o	= offset(this.el)
@@ -286,7 +333,7 @@ var KCTip = (function(){
 				,y	= o.top + this.el.offsetHeight + this.get_indicator_size();
 	
 			this.body.setAttribute('kctip-indicator-pos', 'top' );
-			return this.checkpos(x,y,w,h);
+			return this.checkpos(x,y,w,h,o);
 		},
 		pos_top: function(w,h){
 			let o	= offset(this.el)
@@ -294,7 +341,7 @@ var KCTip = (function(){
 				,y	= o.top - h - this.get_indicator_size();
 	
 			this.body.setAttribute('kctip-indicator-pos', 'bottom' );
-			return this.checkpos(x,y,w,h);
+			return this.checkpos(x,y,w,h,o);
 		},
 		pos_left: function(w,h){
 			let o	= offset(this.el)
@@ -302,7 +349,7 @@ var KCTip = (function(){
 				,y	= o.top + ( this.el.offsetHeight - this.body.offsetHeight )/2;
 	
 			this.body.setAttribute('kctip-indicator-pos', 'right' );
-			return this.checkpos(x,y,w,h);
+			return this.checkpos(x,y,w,h,o);
 		},
 		pos_right: function(w,h){
 			let o	= offset(this.el)
@@ -310,18 +357,22 @@ var KCTip = (function(){
 				,y	= o.top + ( this.el.offsetHeight - this.body.offsetHeight )/2;
 	
 			this.body.setAttribute('kctip-indicator-pos', 'left' );
-			return this.checkpos(x,y,w,h);
+			return this.checkpos(x,y,w,h,o);
 		},
-		checkpos: function(x,y,w,h){
-			let o 		= offset(this.el)
-				,nx 	= x
-				,ny 	= y
-				,pos 	= {x:nx,y:ny}
+		checkpos: function(x,y,w,h,o){
+			o = o || offset(this.el)
+			let nx 	= x
+				,ny = y
+				,pos = {x:nx,y:ny}
 	
 				,clientWidth = document.documentElement.clientWidth
 				,clientHeight = document.documentElement.clientHeight
-				,scrollLeft	= window.pageXOffset || document.documentElement.scrollLeft
-				,scrollTop 	= window.pageYOffset || document.documentElement.scrollTop;
+				,scrollLeft	= typeof o.scrollLeft == 'undefined'
+								? (window.pageXOffset || document.documentElement.scrollLeft)
+								: o.scrollLeft
+				,scrollTop 	= typeof o.scrollTop == 'undefined'
+								? (window.pageYOffset || document.documentElement.scrollTop)
+								: o.scrollTop;
 			
 			w = w || this.w;
 			h = h || this.h;
@@ -385,7 +436,8 @@ var KCTip = (function(){
 
 	
 	/* delegate event */
-		document.addEventListener("DOMContentLoaded", function(){
+		_on(document, "DOMContentLoaded", function(){
+			let _body = document.body;
 			function touchstartPreventMouseover(e){
 					_preventMouseover = true;
 					_isTouch = true;
@@ -396,11 +448,11 @@ var KCTip = (function(){
 					_isTouch = false;
 					_isHover = false;
 				}
-			document.body.addEventListener("touchstart", touchstartPreventMouseover);
-			document.body.addEventListener("touchend", touchendPreventMouseover);
-			document.body.addEventListener("touchcancel", touchendPreventMouseover);
-			//document.body.addEventListener("pointerenter", function pointerenterPreventMouseover(e){
-			document.body.addEventListener("pointerover", function pointerenterPreventMouseover(e){
+			_on(_body, "touchstart", touchstartPreventMouseover);
+			_on(_body, "touchend", touchendPreventMouseover);
+			_on(_body, "touchcancel", touchendPreventMouseover);
+			_on(_body, "pointerover", function pointerenterPreventMouseover(e){
+				// pointerenter
 					if( e.pointerType == 'touch' )
 						touchstartPreventMouseover();
 					else{
@@ -408,8 +460,8 @@ var KCTip = (function(){
 						_isTouch = false;
 					}
 				});
-			//document.body.addEventListener("mouseenter", function mouseoverPreventMouseover(e){
-			document.body.addEventListener("mouseover", function mouseoverPreventMouseover(e){
+			_on(_body, "mouseover", function mouseoverPreventMouseover(e){
+				// mouseenter
 					if( _isTouch ){
 						_isTouch = false;
 						_preventMouseover = true;
@@ -418,8 +470,8 @@ var KCTip = (function(){
 						_isHover = true;
 					}
 				});
-			//document.body.addEventListener("mouseleave", function mouseleavePreventMouseover(e){
-			document.body.addEventListener("mouseout", function mouseleavePreventMouseover(e){
+			_on(_body, "mouseout", function mouseleavePreventMouseover(e){
+				// mouseleave
 					_isHover = false
 				})
 
@@ -428,58 +480,34 @@ var KCTip = (function(){
 				,eventTiphide = document.createEvent('Event');
 			eventTipshow.initEvent('tipshow', true, true);
 			eventTiphide.initEvent('tiphide', true, true);
-			document.body.addEventListener("mouseover", function mouseoverKCTip(e) {
+			_on(_body, "mouseover", function mouseoverKCTip(e) {
 					if( !_preventMouseover ){
-						for (var target=e.target; target && target!=this; target=target.parentNode) {
-							if( elmatches(target, querySelector) ){
-								return KCTip.show(target);
-								break;
-							}
-						}
+						_delegatedo(e, querySelector, function(t){
+							KCTip.show(t);
+						});
 					}
-				}, false);
-			document.body.addEventListener("mouseout", function mouseoutKCTip(e) {
-					for (var target=e.target; target && target!=this; target=target.parentNode) {
-						if( elmatches(target, querySelector) ){
-							return KCTip.hide();
-							break;
-						}
-					}
-				}, false);
-			document.body.addEventListener("click", function clickKCTip(e) {
-					for (var target=e.target; target && target!=this; target=target.parentNode) {
-						if( elmatches(target, querySelector) ){
-							return KCTip.hide(true);
-							break;
-						}
-					}
-				}, false);
-			document.body.addEventListener("tipshow", function tipshowKCTip(e) {
-					for (var target=e.target; target && target!=this; target=target.parentNode) {
-						if( elmatches(target, querySelector) ){
-							return KCTip.trigger_by_el(target);
-							break;
-						}
-					}
-				}, false);
-			document.body.addEventListener("tiphide", function tiphideKCTip(e) {
-					for (var target=e.target; target && target!=this; target=target.parentNode) {
-						if( elmatches(target, querySelector) ){
-							return KCTip.hide();
-							break;
-						}
-					}
-				}, false);
+				});
+			_on(_body, "mouseout", function mouseoutKCTip(e) {
+					_delegatedo(e, querySelector, function(){
+						KCTip.hide();
+					});
+				});
+			_on(_body, "click", function clickKCTip(e) {
+					_delegatedo(e, querySelector, function(){
+						KCTip.hide(true);
+					});
+				});
+			_on(_body, "tipshow", function tipshowKCTip(e) {
+					_delegatedo(e, querySelector, function(t){
+						KCTip.trigger_by_el(t);
+					});
+				});
+			_on(_body, "tiphide", function tiphideKCTip(e) {
+					_delegatedo(e, querySelector, function(){
+						KCTip.hide();
+					});
+				});
 		})
-	
-
-	/* check element matches query selector */
-		function elmatches(elm, selector) {
-			var matches = (elm.document || elm.ownerDocument).querySelectorAll(selector),
-				i = matches.length;
-			while (--i >= 0 && matches.item(i) !== elm) ;
-			return i > -1;
-		}
 	
 	
 	/* plain js */
@@ -488,7 +516,12 @@ var KCTip = (function(){
 			let rect = el.getBoundingClientRect(),
 			scrollLeft = window.pageXOffset || document.documentElement.scrollLeft,
 			scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-			return { top: rect.top + scrollTop, left: rect.left + scrollLeft }
+			return {
+				top: rect.top + scrollTop,
+				left: rect.left + scrollLeft,
+				scrollTop: scrollTop,
+				scrollLeft: scrollLeft
+			}
 		}
 
 
