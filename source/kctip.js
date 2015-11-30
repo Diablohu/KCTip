@@ -436,7 +436,7 @@ var KCTip = (function(){
 
 	
 	/* delegate event */
-		_on(document, "DOMContentLoaded", function(){
+		function _onDOMReady(){
 			let _body = document.body;
 			function touchstartPreventMouseover(e){
 					_preventMouseover = true;
@@ -507,7 +507,14 @@ var KCTip = (function(){
 						KCTip.hide();
 					});
 				});
-		})
+		}
+		if( document.readyState !== "loading" ){
+			_onDOMReady();
+		}else{
+			_on(document, "DOMContentLoaded", function(){
+				_onDOMReady();
+			});
+		}
 	
 	
 	/* plain js */
