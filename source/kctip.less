@@ -6,8 +6,6 @@
 @kctip_bgColor: 	hsla( 51, 0%, 15%, .9 );
 //@kctip_borderColor: rgba(255, 255, 255, .5);
 @kctip_borderColor: #cec6a5;
-@kctip_fontSize: 	14px;
-@kctip_lineHeight: 	150%;
 @kctip_maxWidth: 	320px;
 @kctip_paddingV: 	8px;
 @kctip_paddingH: 	10px;
@@ -25,8 +23,6 @@
 	left:			-1000px;
 	color:			@kctip_fontColor;
 	background:		@kctip_bgColor;
-	font-size: 		@kctip_fontSize;
-	line-height:	@kctip_lineHeight;
 	opacity:		0;
 	cursor:			default !important;
 	transition: 	opacity .2s ease-out;
@@ -34,6 +30,7 @@
 	pointer-events: none;
 	box-shadow:		0 5px 5px rgba(0,0,0,0.35);
 	max-width: 		@kctip_maxWidth;
+	font-family: 	@font_famliy_Hei;
 
 	&>.wrapper{
 		display:	block;
@@ -44,7 +41,8 @@
 	}
 
 	&.mod-blur-backdrop{
-		background:		fade(@kctip_bgColor, 50%);
+		//background:		fade(@kctip_bgColor, 50%);
+		background: 	transparent;
 		&>.wrapper{
 			background:	fade(@kctip_bgColor, 50%);
 		}
@@ -221,8 +219,6 @@
 	
 	
 	&[kctip-class="equipments"]{
-		@color1:	#e8dfc2;
-		@color2:	#6b6836;
         &>.wrapper{
 		  padding: 	0 0 @kctip_paddingV 0;
         }
@@ -243,13 +239,12 @@
 			&>strong{
 				font-size: 	22px;
 				line-height:22px;
-				color: 		@color1;
+				color: 		#cec6a5;
 				display:	block;
 				position:	relative;
 				font-weight:normal;
-				padding: 	unit((34 - 22) / 2, px) 0;
+				padding: 	unit((34 - 22) / 2, px) @kctip_paddingH unit((34 - 22) / 2, px) 42px;
                 color:      #594700;
-                padding-left: 42px;
 				small{
 					padding-left: 	.35em;
 					font-size: 		smaller;
