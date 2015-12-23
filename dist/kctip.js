@@ -95,7 +95,7 @@ var KCTip = (function () {
 		//is_init:		false,
 		//is_showing:	false,
 		//curLoading: 	null,
-		pos: 'bottom',
+		pos: 'top',
 		//pos:			'mouse',
 		//w:			0,
 		//h:			0,
