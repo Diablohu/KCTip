@@ -1,6 +1,6 @@
 {
   "name": "kctip",
-  "version": "0.3.3",
+  "version": "0.4.0",
   "description": "Javascript tool tip library for KanColle",
   "main": "dist/kctip.js",
   "author": "diablohu",
