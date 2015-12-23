@@ -223,6 +223,82 @@
 	&[kctip-class="equipments"]{
 		@color1:	#e8dfc2;
 		@color2:	#6b6836;
+        &>.wrapper{
+		  padding: 	0 0 @kctip_paddingV 0;
+        }
+		h3{
+			display:	block;
+			position:	relative;
+			margin: 	0;
+            background: #cec6a5;
+			&>s{
+				display:	block;
+				width: 		36px;
+				height: 	36px;
+				position:	absolute;
+				top:		-1px;
+				left:		0;
+				background:	no-repeat 50% 50%;
+			}
+			&>strong{
+				font-size: 	22px;
+				line-height:22px;
+				color: 		@color1;
+				display:	block;
+				position:	relative;
+				font-weight:normal;
+				padding: 	unit((34 - 22) / 2, px) 0;
+                color:      #594700;
+                padding-left: 42px;
+				small{
+					padding-left: 	.35em;
+					font-size: 		smaller;
+				}
+			}
+			&>small{
+                height: 	20px;
+                line-height:20px;
+                font-size: 	12px;
+				font-weight:normal;
+				display:	block;
+                background: #594700;
+                color: 		#cec6a5;
+                letter-spacing: -.025em;
+                padding-left: @kctip_paddingH;
+			}
+			&~span{
+				display:	    block;
+                line-height:    19px;
+                font-size:    	13px;
+                padding-left:   @kctip_paddingH;
+				&.requirement{
+					padding-left: 	22px;
+					background: 	no-repeat 0 50%;
+					background-size:16px 16px;
+					&.is-blueprint{
+						background-image:	~"url(@{folder_images}/blueprint.png)";
+					}
+					&.is-catapult{
+						background-image:	~"url(@{folder_images}/catapult.png)";
+					}
+				}
+			}
+			&+span{
+				//border-top: 	1px dashed mix(@color1, @color2, 75%);
+				//padding-top: 	8px;
+				margin-top: 	6px;
+				&.requirement{
+					background-position-y: 	~"calc(50% + 4px)";
+				}
+			}
+		}
+	}
+	
+	
+	/*
+	&[kctip-class="equipments"]{
+		@color1:	#e8dfc2;
+		@color2:	#6b6836;
 		h3{
 			display:	block;
 			position:	relative;
@@ -261,7 +337,9 @@
 				margin-top: 2px;
 			}
 			&~span{
-				display:	block;
+				display:	    block;
+                line-height:    19px;
+                font-size:    	13px;
 				&.requirement{
 					padding-left: 	22px;
 					background: 	no-repeat 0 50%;
@@ -284,4 +362,5 @@
 			}
 		}
 	}
+    */
 }
