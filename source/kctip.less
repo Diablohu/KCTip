@@ -25,7 +25,6 @@
 	background:		@kctip_bgColor;
 	opacity:		0;
 	cursor:			default !important;
-	transition: 	opacity .2s ease-out;
 	user-select: 	none;
 	pointer-events: none;
 	box-shadow:		0 5px 5px rgba(0,0,0,0.35);
@@ -48,15 +47,17 @@
 		}
 	}
 
+	&.show{
+		display:	inline-block;
+		will-change:opacity;
+		transition: opacity .2s ease-out;
+	}
+
 	&.on{
 		opacity:	1;
 		&.mod-blur-backdrop{
 			backdrop-filter: 	~"blur(7.5px)";
 		}
-	}
-	&.show{
-		display:	block;
-		will-change:opacity;
 	}
 
 	&:before{
@@ -135,7 +136,7 @@
 			height: 	34px;
 			line-height:34px;
 			font-size: 	22px;
-			font-weight:lighter;
+			font-weight:100;
 			background: #cec6a5;
 			color: 		#594700;
 			small{
@@ -191,10 +192,10 @@
 				sup{
 					display: 	inline-block;
 					font-size: 	12px;
-					transform: 	scale((10 / 12));
+					transform: 	scale((11 / 12));
 					transform-origin: 0 100%;
 					margin: 	-100% -100% 0 0;
-					padding-left: .35em;
+					padding-left: .3em;
 					opacity: 	.75;
 					vertical-align: baseline;
 					font-weight: 100;
@@ -207,10 +208,10 @@
 					//width: 		200%;
 				}
 				&:nth-child(4n+2){
-					width: 	28%;
+					width: 	26%;
 				}
 				&:nth-child(4n+4){
-					width: 	36%;
+					width: 	38%;
 				}
 			}
 		}
@@ -220,7 +221,7 @@
 	
 	&[kctip-class="equipments"]{
         &>.wrapper{
-		  padding: 	0 0 @kctip_paddingV 0;
+		  padding: 	0;
         }
 		h3{
 			display:	block;
@@ -242,9 +243,10 @@
 				color: 		#cec6a5;
 				display:	block;
 				position:	relative;
-				font-weight:normal;
+				//font-weight:normal;
 				padding: 	unit((34 - 22) / 2, px) @kctip_paddingH unit((34 - 22) / 2, px) 42px;
                 color:      #594700;
+				font-weight:100;
 				small{
 					padding-left: 	.35em;
 					font-size: 		smaller;
@@ -276,6 +278,10 @@
 					&.is-catapult{
 						background-image:	~"url(@{folder_images}/catapult.png)";
 					}
+				}
+				&:last-child{
+					//padding-bottom: @kctip_paddingV;
+					padding-bottom: 6px;
 				}
 			}
 			&+span{

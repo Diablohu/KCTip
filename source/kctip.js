@@ -99,7 +99,7 @@ var KCTip = (function(){
 		//is_showing:	false,
 		//curLoading: 	null,
 		pos:			'top',
-		//pos:			'mouse',
+		//_pos:			'mouse',	// customized position
 		//w:			0,
 		//h:			0,
 		//t: 			null,
@@ -162,7 +162,7 @@ var KCTip = (function(){
 
 			clearTimeout(this.timeout_fade);
 			//pos = pos || el.getAttribute('kctip-position') || this.pos;
-			this.pos = pos || this.el.getAttribute('kctip-position') || this.pos;
+			this._pos = pos || this.el.getAttribute('kctip-position') || this.pos;
 
 			this.init();
 	
@@ -181,7 +181,7 @@ var KCTip = (function(){
 			this.w = this.body.offsetWidth;
 			this.h = this.body.offsetHeight;
 	
-			let coords = this['pos_'+(pos||this.pos)]( this.w , this.h );
+			let coords = this['pos_'+(pos||this._pos||this.pos)]( this.w , this.h );
 			if(coords)
 				this.move(coords.x, coords.y);
 		},
@@ -194,18 +194,19 @@ var KCTip = (function(){
 	
 			//this.el_pending = null
 			
-			function h(){
+			function _hide_after(){
 				_removeClass(KCTip.body, 'on');
 				_off( KCTip.el, 'mousemove', KCTipMouseMoveHandler );
 				KCTip.el = null;
 				KCTip.is_showing = false;
-				KCTip.pos = 'bottom';
+				//KCTip.pos = 'top';
+				delete KCTip._pos;
 			}
 			
-			if( this.pos == 'mouse' )
-				requestAnimationFrame(h);
+			if( this._pos == 'mouse' )
+				requestAnimationFrame(_hide_after);
 			else
-				this.timeout_fade = setTimeout(h, is_instant ? 0 : this.countdown_fade);
+				this.timeout_fade = setTimeout(_hide_after, is_instant ? 0 : this.countdown_fade);
 		},
 		
 		// 完全隐藏
