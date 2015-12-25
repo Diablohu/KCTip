@@ -103,7 +103,7 @@ var KCTip = (function(){
 		//w:			0,
 		//h:			0,
 		//t: 			null,
-		size_indicator:	8,
+		//size_indicator:	8,
 		language: 		'zh_cn',
 		cache: {},
 		
@@ -321,11 +321,13 @@ var KCTip = (function(){
 	
 		// 获取小箭头尺寸
 		get_indicator_size: function(){
-			return this.size_indicator;
+			//return this.size_indicator;
+			return 8;
 		},
 	
 		// tip位置函数
 		pos_mouse: function(w,h){
+			this.body.removeAttribute('kctip-indicator-pos');
 			_on(this.el, 'mousemove', KCTipMouseMoveHandler);
 		},
 		pos_bottom: function(w,h){
@@ -547,15 +549,20 @@ var KCTip = (function(){
 			,scrollLeft = window.pageXOffset || document.documentElement.scrollLeft
 			,scrollTop = window.pageYOffset || document.documentElement.scrollTop
 			,x = _x + 10 + scrollLeft
-			,y = _y + 25 + scrollTop;
+			//,y = _y + 25 + scrollTop;
+			,y = _y - KCTip.h - 5 + scrollTop
 	
 		// 超出X轴右边界
 			if ((x + KCTip.w + 10) > clientWidth + scrollLeft )
 				x = clientWidth + scrollLeft - KCTip.w - 10;
 	
 		// 超出Y轴下边界
-			if ((y + KCTip.h + 10) > clientHeight + scrollTop )
-				y = clientHeight + scrollTop - KCTip.h - 10;
+			//if ((y + KCTip.h + 10) > clientHeight + scrollTop )
+			//	y = clientHeight + scrollTop - KCTip.h - 10;
+
+		// 超出Y轴上边界
+			if( y - scrollTop <= 10 )
+				y = _y + 25 + scrollTop
 
 		return KCTip.move(x,y);
 	}
