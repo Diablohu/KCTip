@@ -288,7 +288,7 @@ var KCTip = (function(){
 			//this.cache.loading.innerHTML = '载入中...';
 			
 			let script = _create('script');
-			script.src = 'http://fleet.diablohu.com/!/tip/'+t+'/'+l+'/'+i+'.js';
+			script.src = 'http://fleet.moe/!/tip/'+t+'/'+l+'/'+i+'.js';
 			_on(script, 'error', function(e) {
 				//KCTip.cache.loading.innerHTML = '发生错误...';
 				KCTip.update('发生错误...', 'error');
@@ -478,7 +478,7 @@ var KCTip = (function(){
 					_isHover = false
 				})
 
-			let querySelector = '[href^="http://fleet.diablohu.com/"], [kctip]'
+			let querySelector = '[href^="http://fleet.moe/"], [href^="http://fleet.diablohu.com/"], [kctip]'
 				,eventTipshow = document.createEvent('Event')
 				,eventTiphide = document.createEvent('Event');
 			eventTipshow.initEvent('tipshow', true, true);
